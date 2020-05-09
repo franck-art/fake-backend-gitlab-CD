@@ -42,7 +42,7 @@
       state: started
    
       ports:
-        - "8181:3000"
+        - "5252:3000"
       env:
         DATABASE_HOST: "dbgame"
         DATABASE_PORT: "3306"
