@@ -1,0 +1,56 @@
+---
+- name: Deploiement de l'appli fake-backend comme  frontend battleboat
+  hosts: web 
+  gather_facts: no
+  become: true
+
+
+  tasks:
+
+  - name: Create a volume
+    docker_volume:
+      name: mysql_config
+
+  - name: Create a global network of our two containers
+    docker_network:
+      name: network_game
+ 
+#  Deploiement du container dbgame du BACKEND
+  - name: Deploiement de la base de données (Mysql:5.7) BACKEND
+    docker_container:
+      name: dbgame
+      image: mysql:5.7
+      state: started
+      env:
+        MYSQL_ROOT_PASSWORD: rootpwdgame
+        MYSQL_DATABASE: battleboat
+        MYSQL_USER: battleuser
+        MYSQL_PASSWORD: battlepass
+
+      volumes:
+        - mysql_config:/var/lib/mysql
+      networks:
+      - name: network_game 
+
+
+# Deploiement de l'appli web battleboat (battlegame) FRONDEND
+ 
+  - name: container battlegame
+    docker_container:
+      name: battlegame
+      image: fake_backend
+      state: started
+   
+      ports:
+        - "8181:3000"
+      env:
+        DATABASE_HOST: "dbgame"
+        DATABASE_PORT: "3306"
+        DATABASE_USER: "battleuser"
+        DATABASE_PASSWORD: "battlepass"
+        DATABASE_NAME: "battleboat"
+
+      volumes:
+        - "./battleboat:/etc/backend/static"
+      networks:
+        - name: network_game    
