@@ -57,7 +57,7 @@
   - name: container battlegame
     docker_container:
       name: battlegame
-      image: fake_backend
+      image: {{ fake_backend }}
       state: started
    
       ports:
