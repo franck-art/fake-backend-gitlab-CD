@@ -85,6 +85,6 @@
         DATABASE_NAME: "battleboat"
 
       volumes:
-        - "battleboat:/etc/backend/static"
+        - "./battleboat:/etc/backend/static"
       networks:
         - name: network_game    
