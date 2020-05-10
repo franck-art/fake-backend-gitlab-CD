@@ -5,8 +5,27 @@
   become: true
 
 
-  tasks:
+  vars:
+    pip_install_packages:
+      - name: docker
 
+  pre_tasks:
+  - name: upgrade all packages 
+    yum:
+      name: '*'
+      state: latest 
+
+  - name: Install epel release
+    yum: 
+      name: epel-release
+      state: installed
+
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker
+ 
+  tasks:
+   
   - name: Create a volume
     docker_volume:
       name: mysql_config
