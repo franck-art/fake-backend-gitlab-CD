@@ -1,5 +1,5 @@
 ---
 
-dockerhub_login_vault: {{ dockerhub_login }}
+dockerhub_login_vault: "{{ dockerhub_login }}"
 
-dockerhub_pwd_vault: {{ dockerhub_pwd }}
+dockerhub_pwd_vault: "{{ dockerhub_pwd }}"

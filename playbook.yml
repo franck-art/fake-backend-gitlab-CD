@@ -61,18 +61,18 @@
 
   - name: Log into DockerHub
     docker_login:
-      username: "{{ docker_hub_login}}"
-      password: "{{ docker_hub_pwd }}"
+      username: "{{ dockerhub_login_vault }}"
+      password: "{{ dockerhub_pwd_vault }}"
    
   - name: pull an image
     docker_image:
-      name: "{{ docker_hub_login }}/fake_backend:latest" 
+      name: "{{ dockerhub_login_vault }}/fake_backend:latest" 
       source: pull
 
   - name: container battlegame
     docker_container:
       name: battlegame
-      image: "{{ dockerhub_login }}/fake_backend:latest"
+      image: "{{ dockerhub_login_vault }}/fake_backend:latest"
       state: started
    
       ports:
