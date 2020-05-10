@@ -32,7 +32,7 @@
    
   - name: Create a volume
     docker_volume:
-      name: mysql_config
+      name: mysql_data
 
   - name: Create a global network of our two containers
     docker_network:
@@ -51,7 +51,7 @@
         MYSQL_PASSWORD: battlepass
 
       volumes:
-        - mysql_config:/var/lib/mysql
+        - mysql_data:/var/lib/mysql
       networks:
       - name: network_game 
 
@@ -85,6 +85,6 @@
         DATABASE_NAME: "battleboat"
 
       volumes:
-        - "./battleboat:/etc/backend/static"
+        - "battleboat:/etc/backend/static"
       networks:
         - name: network_game    
