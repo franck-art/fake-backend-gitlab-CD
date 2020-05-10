@@ -1,7 +1,7 @@
 ---
 - name: Deploiement de l'appli fake-backend comme  frontend battleboat
   hosts: web 
-  gather_facts: no
+  gather_facts: yes
   become: true
 
 
