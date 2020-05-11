@@ -27,7 +27,7 @@
   roles:
     - geerlingguy.pip
     - geerlingguy.docker
- 
+    - geerlingguy.git 
   tasks:
    
   - name: Create a volume

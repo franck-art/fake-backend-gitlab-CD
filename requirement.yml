@@ -4,3 +4,6 @@
 # install pip
 
 - src: geerlingguy.pip
+
+# install git
+- src: geerlingguy.git
