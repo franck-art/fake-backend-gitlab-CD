@@ -58,6 +58,26 @@
 
 # Deploiement de l'appli web battleboat (battlegame) FRONDEND
 
+  - name: create project directory
+    file:
+      path: "{{home}}/mini_projet"
+      state: directory
+
+  - name: copy devops private key file
+    copy:
+      content: "{{ github_private_key }}"
+      dest: "{{home}}/.ssh/id_rsa"
+      owner: centos
+
+  - name: load the source code in github
+    git:
+      repo: "{{ repo_fake_backend  }}"
+      dest: "{{home}}/mini_projet"
+      accept_hostkey: yes
+      force: yes
+      recursive: no
+      key_file: "{{ home }}/.ssh/id_rsa"
+      version: latest
 
   - name: Log into DockerHub
     docker_login:
@@ -85,6 +105,6 @@
         DATABASE_NAME: "battleboat"
 
       volumes:
-        - "./battleboat:/etc/backend/static"
+        - "{{home}}/mini_projet/battleboat:/etc/backend/static"
       networks:
         - name: network_game    
