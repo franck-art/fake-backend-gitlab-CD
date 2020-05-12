@@ -16,7 +16,7 @@
   pre_tasks:
   - name: upgrade all packages 
     yum:
-      name: '*'
+      update_only: yes
       state: latest 
 
   - name: Install epel release
@@ -25,86 +25,9 @@
       state: installed
 
   roles:
-    - geerlingguy.pip
-    - geerlingguy.docker
-    - geerlingguy.git 
-  tasks:
-   
-  - name: Create a volume
-    docker_volume:
-      name: mysql_data
-
-  - name: Create a global network of our two containers
-    docker_network:
-      name: network_game
- 
-#  Deploiement du container dbgame du BACKEND
-  - name: Deploiement de la base de données (Mysql:5.7) BACKEND
-    docker_container:
-      name: dbgame
-      image: mysql:5.7
-      state: started
-      env:
-        MYSQL_ROOT_PASSWORD: rootpwdgame
-        MYSQL_DATABASE: battleboat
-        MYSQL_USER: battleuser
-        MYSQL_PASSWORD: battlepass
-
-      volumes:
-        - mysql_data:/var/lib/mysql
-      networks:
-      - name: network_game 
-
-
-# Deploiement de l'appli web battleboat (battlegame) FRONDEND
-
-  - name: create project directory
-    file:
-      path: "{{home}}/mini_projet"
-      state: directory
-
-  - name: copy devops private key file
-    copy:
-      content: "{{ github_private_key }}"
-      dest: "{{home}}/.ssh/id_rsa"
-      owner: centos
-
-  - name: load the source code in github
-    git:
-      repo: "{{ repo_fake_backend  }}"
-      dest: "{{home}}/mini_projet"
-      accept_hostkey: yes
-      force: yes
-      recursive: no
-      key_file: "{{ home }}/.ssh/id_rsa"
-      version: "{{ tag_version }}"
-
-  - name: Log into DockerHub
-    docker_login:
-      username: "{{ dockerhub_login_vault }}"
-      password: "{{ dockerhub_pwd_vault }}"
-   
-  - name: pull an image
-    docker_image:
-      name: "{{ dockerhub_login_vault }}/fake_backend:latest" 
-      source: pull
-
-  - name: container battlegame
-    docker_container:
-      name: battlegame
-      image: "{{ dockerhub_login_vault }}/fake_backend:latest"
-      state: started
-   
-      ports:
-        - "5050:3000"
-      env:
-        DATABASE_HOST: "dbgame"
-        DATABASE_PORT: "3306"
-        DATABASE_USER: "battleuser"
-        DATABASE_PASSWORD: "battlepass"
-        DATABASE_NAME: "battleboat"
-
-      volumes:
-        - "{{home}}/mini_projet/battleboat:/etc/backend/static"
-      networks:
-        - name: network_game    
+    - role: 'geerlingguy.pip'
+    - role: 'geerlingguy.docker'
+    - role: 'geerlingguy.git' 
+    - role: 'roles/backend'
+    - role: 'roles/frondend'
+  
