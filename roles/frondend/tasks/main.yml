@@ -21,7 +21,7 @@
     force: yes
     recursive: no
     key_file: "{{ home }}/.ssh/id_rsa"
-    version: "{{ tag_version }}"
+    version: "{{ branch_clone }}"
 
 - name: Log into DockerHub
   docker_login:
@@ -32,6 +32,8 @@
   docker_image:
     name: "{{ dockerhub_login_vault }}/fake_backend:latest"
     source: pull
+    tag: "{{ tag_version }}"
+
 
 - name: container battlegame
   docker_container:

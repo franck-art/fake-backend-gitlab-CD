@@ -15,3 +15,5 @@ fake_backend_source_branch: "master"
 repo_fake_backend: "git@github.com:franck-art/projet_jenkins_fake-backend.git"
 
 tag_version: "latest"
+
+branch_clone: "master"
