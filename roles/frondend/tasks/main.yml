@@ -44,11 +44,11 @@
     ports:
       - "80:3000"
     env:
-      DATABASE_HOST: dbgame
-      DATABASE_PORT: 3306
-      DATABASE_USER: battleuser
-      DATABASE_PASSWORD: battlepass
-      DATABASE_NAME: battleboat
+      DATABASE_HOST: "dbgame"
+      DATABASE_PORT: "3306"
+      DATABASE_USER: "battleuser"
+      DATABASE_PASSWORD: "battlepass"
+      DATABASE_NAME: "battleboat"
 
     volumes:
         - "{{home}}/mini_projet/battleboat:/etc/backend/static"
