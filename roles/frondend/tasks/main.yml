@@ -42,7 +42,7 @@
     state: started
 
     ports:
-      - "5050:3000"
+      - "80:3000"
     env:
       DATABASE_HOST: "dbgame"
       DATABASE_PORT: "3306"
@@ -50,8 +50,8 @@
       DATABASE_PASSWORD: "battlepass"
       DATABASE_NAME: "battleboat"
 
-      volumes:
+    volumes:
         - "{{home}}/mini_projet/battleboat:/etc/backend/static"
-      networks:
-        - name: network_game
+    networks:
+      - name: network_game
 
