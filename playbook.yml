@@ -1,7 +1,7 @@
 ---
-# Play à deployer
-- name: Deploiement de l'appli fake-backend comme  frontend battleboat
-  hosts: web 
+# Play to deploy
+- name: deployment of the fake-backend / battleboat app with gitlab
+  hosts: build deploy
   gather_facts: yes
   become: true
 
@@ -15,22 +15,27 @@
       - name: docker
 
   pre_tasks:
-  - name: update all packages 
-    yum:
-      name: '*'
-      update_only: yes
-      update_cache: yes
-      state: latest 
+    - block:
+      - name: update all packages 
+        yum:
+          name: '*'
+          update_only: yes
+          update_cache: yes
+          state: latest 
 
-  - name: Install epel release
-    yum: 
-      name: epel-release
-      state: installed
+      - name: Install epel release
+        yum: 
+          name: epel-release
+          state: installed
+     
+      - name: install git
+        package: name=git state=present
 
+      tags:
+        - always
   roles:
-    - role: 'geerlingguy.pip'
-    - role: 'geerlingguy.docker'
-    - role: 'geerlingguy.git' 
+    - { role: geerlingguy.pip, tags: [ always ] }
+    - { role: geerlingguy.docker, tags: [ always ] }
     - role: 'roles/backend'
     - role: 'roles/frondend'
   

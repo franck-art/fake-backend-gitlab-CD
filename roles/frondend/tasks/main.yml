@@ -1,17 +1,21 @@
 ---
-
-# Deploiement de l'appli web battleboat (battlegame) FRONDEND
-
+# Resumé de mes taches pour deployer l'appli
 - name: create project directory
   file:
     path: "{{home}}/mini_projet"
     state: directory
+  tags:
+    - build
+    - deploy
 
 - name: copy devops private key file
   copy:
     content: "{{ github_private_key }}"
     dest: "{{home}}/.ssh/id_rsa"
     owner: centos
+  tags:
+    - build
+    - deploy 
 
 - name: load the source code in github
   git:
@@ -21,28 +25,37 @@
     force: yes
     recursive: no
     key_file: "{{ home }}/.ssh/id_rsa"
-    version: "{{ branch_clone }}"
+    version: "{{ fake_backend_source_branch }}"
+  tags:
+    - build
+    - deploy
 
 - name: Log into DockerHub
   docker_login:
     username: "{{ dockerhub_login_vault }}"
     password: "{{ dockerhub_pwd_vault }}"
+  tags:
+    - build
 
-- name: pull an image
+- name: Build an image and push it to a private repo/Docker hub
   docker_image:
-    name: "{{ dockerhub_login_vault }}/fake_backend:latest"
-    source: pull
+    build:
+      path: "{{home}}/mini_projet/fake-backend/"
+    name: "{{ dockerhub_login_vault }}/fake-backend"
     tag: "{{ tag_version }}"
-
+    push: yes
+    source: build
+  tags:
+    - build  
 
 - name: container battlegame
   docker_container:
     name: battlegame
-    image: "{{ dockerhub_login_vault }}/fake_backend:latest"
+    image: "{{ dockerhub_login_vault }}/fake-backend:{{ tag_version }}"
     state: started
-
+   
     ports:
-      - "80:3000"
+      - "8181:3000"
     env:
       DATABASE_HOST: "dbgame"
       DATABASE_PORT: "3306"
@@ -51,7 +64,9 @@
       DATABASE_NAME: "battleboat"
 
     volumes:
-        - "{{home}}/mini_projet/battleboat:/etc/backend/static"
+      - "{{ home }}/mini_projet/battleboat:/etc/backend/static"
     networks:
-      - name: network_game
+      - name: network_game    
+  tags:
+    - deploy
 

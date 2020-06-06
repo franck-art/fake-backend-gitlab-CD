@@ -4,10 +4,14 @@
 - name: Create a global network of our two containers
   docker_network:
     name: network_game
+  tags:
+    - deploy
+
 - name: Create a volume
   docker_volume:
     name: mysql_data
-
+  tags:
+    - deploy
 
 - name: Deploiement de la base de données (Mysql:5.7) BACKEND
   docker_container:
@@ -24,4 +28,5 @@
       - mysql_data:/var/lib/mysql
     networks:
       - name: network_game
-
+  tags:
+    - deploy
