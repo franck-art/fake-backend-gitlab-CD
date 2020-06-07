@@ -4,16 +4,12 @@
   hosts: build deploy
 #  gather_facts: yes
   become: true
-
-
   vars_files:
     - "vars/secret.yml"
     - "vars/main.yml"
-
   vars:
     pip_install_packages:
       - name: docker
-
   pre_tasks:
     - block:
       - name: update all packages 
@@ -22,17 +18,14 @@
           update_only: yes
           update_cache: yes
           state: latest 
-
       - name: Install epel release
         yum: 
           name: epel-release
           state: installed
-     
       - name: install git
         package: name=git state=present
       tags:
         - always
-
   roles:
     - { role: geerlingguy.pip, tags: [ always ] }
     - { role: geerlingguy.docker, tags: [ always ] }
