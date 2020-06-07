@@ -1,8 +1,8 @@
 ---
-# Resumé de mes taches pour deployer l'appli
+# Resume de mes taches pour deployer l'appli
 - name: create project directory
   file:
-    path: "{{home}}/mini_projet"
+    path: "{{ home }}/mini_projet"
     state: directory
   tags:
     - build
@@ -11,7 +11,7 @@
 - name: copy devops private key file
   copy:
     content: "{{ github_private_key }}"
-    dest: "{{home}}/.ssh/id_rsa"
+    dest: "{{ home }}/.ssh/id_rsa"
     owner: centos
   tags:
     - build
@@ -20,7 +20,7 @@
 - name: load the source code in github
   git:
     repo: "{{ repo_fake_backend  }}"
-    dest: "{{home}}/mini_projet"
+    dest: "{{ home }}/mini_projet"
     accept_hostkey: yes
     force: yes
     recursive: no
